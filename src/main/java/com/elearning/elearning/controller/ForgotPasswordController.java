@@ -24,7 +24,7 @@ public class ForgotPasswordController {
         Optional<RegisterUser> userOpt = registerRepo.findByEmail(email);
 
         if (userOpt.isPresent()) {
-            // For now, just return success. 
+            // For now, just return success.
             // Later you can generate reset tokens + send email link.
             return ResponseEntity.ok("Password reset link sent to " + email + " ✅");
         } else {
@@ -48,4 +48,3 @@ public class ForgotPasswordController {
         }
     }
 }
-

@@ -1,6 +1,5 @@
 package com.elearning.elearning.controller;
 
-
 import com.elearning.elearning.entity.User;
 import com.elearning.elearning.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -12,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "*") // 
+@CrossOrigin(origins = "*")
 public class UserController {
 
     private final UserService userService;
@@ -21,15 +20,18 @@ public class UserController {
         this.userService = userService;
     }
 
+    // ✅ Register API
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody User user) {
         return ResponseEntity.ok(userService.register(user));
     }
 
+    // ✅ Login API
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody User user) {
         Optional<User> validUser = userService.login(user.getEmail(), user.getPassword());
         Map<String, String> response = new HashMap<>();
+
         if (validUser.isPresent()) {
             response.put("message", "Login successful ✅");
             response.put("email", validUser.get().getEmail());
@@ -39,6 +41,4 @@ public class UserController {
             return ResponseEntity.status(401).body(response);
         }
     }
-
-    }
-
+}

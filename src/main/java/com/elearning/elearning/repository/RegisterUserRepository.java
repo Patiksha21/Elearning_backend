@@ -9,4 +9,3 @@ import java.util.Optional;
 public interface RegisterUserRepository extends JpaRepository<RegisterUser, Long> {
     Optional<RegisterUser> findByEmail(String email);
 }
-

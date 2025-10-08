@@ -48,6 +48,39 @@ public class CourseController {
         courseService.deleteCourse(id);
     }
 
+    @PutMapping("/{id}/syllabus")
+    public ResponseEntity<String> updateSyllabus(@PathVariable Long id, @RequestBody List<String> topics) {
+        try {
+            courseService.updateCourseSyllabus(id, topics);
+            return ResponseEntity.ok("Syllabus updated successfully.");
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("Course not found.", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            System.err.println("Error updating syllabus: " + e.getMessage());
+            return new ResponseEntity<>("Failed to update syllabus.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    // Inside com.elearning.elearning.controller.CourseController
+
+    /**
+     * API: POST /api/courses/{id}/syllabus (Adds or replaces the syllabus for a course)
+     * Note: This implementation behaves identically to PUT by replacing the entire list.
+     */
+    @PostMapping("/{id}/syllabus")
+    @ResponseStatus(HttpStatus.CREATED) // 201
+    public ResponseEntity<String> addSyllabus(@PathVariable Long id, @RequestBody List<String> topics) {
+        try {
+            // We use the same service method as the goal is to set the new list of topics
+            courseService.updateCourseSyllabus(id, topics);
+            return new ResponseEntity<>("Syllabus added successfully.", HttpStatus.CREATED);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>("Course not found.", HttpStatus.NOT_FOUND);
+        } catch (Exception e) {
+            System.err.println("Error adding syllabus: " + e.getMessage());
+            return new ResponseEntity<>("Failed to add syllabus.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     // API: GET /api/courses/{id}/syllabus (Fetch syllabus)
     @GetMapping("/{id}/syllabus")
     public List<String> fetchSyllabus(@PathVariable Long id) {

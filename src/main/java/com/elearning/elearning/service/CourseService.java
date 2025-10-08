@@ -57,6 +57,20 @@ public class CourseService {
     public List<String> getCourseSyllabus(Long id) {
         Course course = getCourseById(id);
         return course.getSyllabus();
+
     }
+
+    public void updateCourseSyllabus(Long courseId, List<String> topics) {
+        // 1. Find the existing course
+        Course existingCourse = courseRepository.findById(courseId)
+                .orElseThrow(() -> new NoSuchElementException("Course not found with id: " + courseId));
+
+        // 2. Set the new list of topics
+        existingCourse.setSyllabus(topics);
+
+        // 3. Save the modified course entity back to the database
+        courseRepository.save(existingCourse);
+    }
+
 }
  

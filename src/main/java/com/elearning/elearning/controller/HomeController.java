@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "*") 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/home")
 public class HomeController {
@@ -25,8 +25,8 @@ public class HomeController {
         List<Course> allCourses = courseService.getAllCourses();
         // Return only the first 6 courses (or less if fewer exist)
         List<Course> latestCourses = allCourses.stream()
-                                               .limit(6)
-                                               .toList();
+                .limit(6)
+                .toList();
         return new ResponseEntity<>(latestCourses, HttpStatus.OK);
     }
 

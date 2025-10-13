@@ -26,10 +26,11 @@ public class ForgotPasswordController {
         return genericSuccess;
     }
 
+
     // ✅ New endpoint for testing email sending
     @PostMapping("/test-mail")
     public String testMail() {
-        emailService.sendResetLink("yourpersonal@gmail.com", "https://example.com/reset");
+        emailService.sendResetLink("morankarprathamesh@gmail.com", "https://example.com/reset");
         return "Mail triggered";
     }
 

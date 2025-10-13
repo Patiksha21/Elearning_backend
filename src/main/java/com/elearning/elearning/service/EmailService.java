@@ -14,31 +14,17 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     public void sendResetLink(String toEmail, String resetLink) {
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setFrom("anandrawool5624@gmail.com");
-            if (toEmail == null || !toEmail.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
-                throw new IllegalArgumentException("Invalid email address: " + toEmail);
-            }
-            message.setTo(toEmail);
-            message.setSubject("Password Reset Link - E-Learning Platform");
-            message.setText(
-                    "Hello,\n\n" +
-                            "You requested a password reset for your E-Learning account.\n\n" +
-                            "Click the link below to reset your password:\n" +
-                            resetLink + "\n\n" +
-                            "⚠️ Note: This link will expire in 15 minutes.\n" +
-                            "If you didn’t request this, please ignore this email.\n\n" +
-                            "Regards,\n" +
-                            "E-Learning Platform Team"
-            );
+        SimpleMailMessage message = new SimpleMailMessage();
 
-            mailSender.send(message);
-            System.out.println("Reset email sent successfully to: " + toEmail);
+        // 💡 OPTIONAL: Set a "from" address if not configured globally
+        // message.setFrom("no-reply@yourplatform.com");
 
-        } catch (Exception e) {
-            System.err.println("Failed to send reset email: " + e.getMessage());
-            e.printStackTrace();
-        }
+        message.setTo(toEmail);
+        message.setSubject("Password Reset Link - E-Learning Platform");
+        message.setText("Click the link below to reset your password:\n\n" + resetLink +
+                "\n\nThis link will expire in [e.g., 15 minutes]. If you didn’t request this, please ignore this email.");
+
+        // NOTE: This can throw an exception if the mail server config is incorrect or unavailable.
+        mailSender.send(message);
     }
 }

@@ -14,17 +14,34 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     public void sendResetLink(String toEmail, String resetLink) {
-        SimpleMailMessage message = new SimpleMailMessage();
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
 
-        // 💡 OPTIONAL: Set a "from" address if not configured globally
-        // message.setFrom("no-reply@yourplatform.com");
+            message.setFrom("morankarprathamesh@gmail.com");
 
-        message.setTo(toEmail);
-        message.setSubject("Password Reset Link - E-Learning Platform");
-        message.setText("Click the link below to reset your password:\n\n" + resetLink +
-                "\n\nThis link will expire in [e.g., 15 minutes]. If you didn’t request this, please ignore this email.");
+            if (toEmail == null || !toEmail.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+                throw new IllegalArgumentException("Invalid email address: " + toEmail);
+            }
 
-        // NOTE: This can throw an exception if the mail server config is incorrect or unavailable.
-        mailSender.send(message);
+            message.setTo(toEmail);
+            message.setSubject("Password Reset Link - E-Learning Platform");
+            message.setText(
+                    "Hello,\n\n" +
+                            "You requested a password reset for your E-Learning account.\n\n" +
+                            "Click the link below to reset your password:\n" +
+                            resetLink + "\n\n" +
+                            "Note: This link will expire in 15 minutes.\n" +
+                            "If you didn’t request this, please ignore this email.\n\n" +
+                            "Regards,\n" +
+                            "E-Learning Platform Team"
+            );
+
+            mailSender.send(message);
+            System.out.println("Reset email sent successfully to: " + toEmail);
+
+        } catch (Exception e) {
+            System.err.println("Failed to send reset email: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

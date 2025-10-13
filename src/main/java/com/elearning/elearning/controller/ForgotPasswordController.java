@@ -1,8 +1,14 @@
 package com.elearning.elearning.controller;
 
+import com.elearning.elearning.entity.User;
+import com.elearning.elearning.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.elearning.elearning.service.EmailService;
+
+import java.util.Optional;
+import java.util.UUID;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -12,18 +18,25 @@ public class ForgotPasswordController {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @PostMapping("/forgot-password")
-    public String forgotPassword(@RequestParam String email) {
-        boolean userExists = checkIfUserExists(email);
-        String genericSuccess = "If an account is associated with " + email + ", a password reset link has been sent.";
+    public ResponseEntity<String> forgotPassword(@RequestParam String email) {
+        Optional<User> existingUser = userRepository.findByEmail(email);
 
-        if (userExists) {
-            String secureToken = generateAndSaveToken(email);
-            String resetLink = "https://yourfrontend.com/reset-password?token=" + secureToken;
-            emailService.sendResetLink(email, resetLink);
+        if (existingUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("This email is not registered!");
         }
+        String token = UUID.randomUUID().toString();
 
-        return genericSuccess;
+        // (You can store this token + expiry in DB if needed)
+        // existingUser.get().setResetToken(token);
+        // userRepository.save(existingUser.get());
+
+        String resetLink = "https://elearning.com/reset-password?token=" + token;
+        emailService.sendResetLink(email, resetLink);
+        return ResponseEntity.ok("Password reset link sent to: " + email);
     }
 
 
